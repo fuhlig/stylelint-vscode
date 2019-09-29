@@ -39,7 +39,7 @@
 		"array-to-sentence": "^2.0.0",
 		"inspect-with-kind": "^1.0.5",
 		"lodash": "^4.17.11",
-		"stylelint": "^10.0.1",
+		"stylelint": "^11.0.0",
 		"stylelint-warning-to-vscode-diagnostic": "^1.0.1",
 		"vscode-languageserver": "^5.2.1"
 	},

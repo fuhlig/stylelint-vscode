@@ -329,23 +329,42 @@ a { color: #000 }
 		}
 	})();
 
-	try {
-		await stylelintVSCode(new Document('unknown-rule.css', 'css', 'b{}'), {
+	(async () => {
+		const config = {
 			config: {
 				rules: {
 					'this-rule-does-not-exist': 1,
 					'this-rule-also-does-not-exist': 1
 				}
 			}
-		});
-		fail();
-	} catch ({message}) {
-		t.equal(
-			message,
-			'Undefined rule this-rule-does-not-exist',
-			'should be rejected when the rules include unknown one.'
-		);
-	}
+		};
+
+		const expected = [
+			{
+				range: {
+					start: {line: 0, character: 0},
+					end: {line: 0, character: 0}
+				},
+				message: 'Unknown rule this-rule-does-not-exist.',
+				severity: 1,
+				code: 'this-rule-does-not-exist',
+				source: 'stylelint'
+			}, {
+				range: {
+					start: {line: 0, character: 0},
+					end: {line: 0, character: 0}
+				},
+				message: 'Unknown rule this-rule-also-does-not-exist.',
+				severity: 1,
+				code: 'this-rule-also-does-not-exist',
+				source: 'stylelint'
+			}
+		];
+
+		const actual = await stylelintVSCode(new Document('unknown-rule.css', 'css', 'b{}'), config);
+
+		t.deepEqual(actual, expected, 'should warn when the rules include unknown one.');
+	})();
 
 	try {
 		await stylelintVSCode(Symbol('!'));
@@ -402,7 +421,7 @@ a { color: #000 }
 	}
 });
 
-test('stylelintVSCode() with a configration file', async t => {
+test('stylelintVSCode() with a configuration file', async t => {
 	process.chdir(__dirname);
 
 	t.deepEqual(

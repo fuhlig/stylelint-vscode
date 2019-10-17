@@ -23,7 +23,7 @@ class Document {
 }
 
 test('stylelintVSCode()', async t => {
-	t.plan(20);
+	t.plan(21);
 
 	(async () => {
 		t.deepEqual(
@@ -418,6 +418,19 @@ a { color: #000 }
 			'Expected 1 or 2 arguments (<TextDocument>[, <Object>]), but got 3 arguments.',
 			'should be rejected when it takes too many argument.'
 		);
+	}
+
+	try {
+		const config = {
+			config: {
+				processors: 'unknown'
+			}
+		};
+
+		await stylelintVSCode(new Document('unknown-processors.css', 'css', 'b{}'), config);
+		fail();
+	} catch ({message}) {
+		t.deepEqual(message, 'Could not find "unknown". Do you need a `configBasedir`?', 'should emit an error if an unknown processor is configured.');
 	}
 });
 
